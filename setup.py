@@ -36,8 +36,16 @@ setup(
         'django_fsm',
         'edx-rest-api-client>=1.9.2',
         'edx-auth-backends>=2.0.2',
+        'django-jsonfield-backport',
     ],
     setup_requires=[
         'setuptools-scm',
     ],
+    entry_points={
+        'lms.djangoapp': [
+            'edx_webhooks = edx_webhooks.apps:EdXWebhooksConfig',
+            'edx_webhooks_shopify = edx_webhooks_shopify.apps:EdXWebhooksShopifyConfig',
+            'edx_webhooks_woocommerce = edx_webhooks_woocommerce.apps:EdXWebhooksWoocommerceConfig',
+        ]
+    }
 )
