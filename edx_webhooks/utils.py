@@ -81,13 +81,11 @@ def hmac_is_valid(key, body, hmac_to_verify):
     return get_hmac(key, body) == hmac_to_verify
 
 
-def enroll_in_course(course_id,
-                     email,
-                     send_email=True):
+def enroll_in_course(course_id, email, action, send_email=True):
     """
-    Auto-enroll email in course.
+    Auto-enroll (or unenroll) email in course.
 
-    Uses the bulk enrollment API, defined in lms/djangoapps/bulk_enroll
+    Uses the bulk enrollment API, defined in lms/djangoapps/bulk_enroll.
     """
 
     # Raises ValidationError if invalid
@@ -109,7 +107,7 @@ def enroll_in_course(course_id,
     request_params = {
         "auto_enroll": True,
         "email_students": send_email,
-        "action": "enroll",
+        "action": action,
         "courses": course_id,
         "identifiers": email,
     }

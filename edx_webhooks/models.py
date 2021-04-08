@@ -90,13 +90,21 @@ class Order(ConcurrentTransitionMixin, Model):
     PROCESSED = STATE.PROCESSED
     ERROR = STATE.ERROR
 
+    ACTION_ENROLL = "enroll"
+    ACTION_UNENROLL = "unenroll"
+
     CHOICES = STATE.CHOICES
+    ACTIONS = (
+        (ACTION_ENROLL, ACTION_ENROLL),
+        (ACTION_UNENROLL, ACTION_UNENROLL),
+    )
 
     id = BigIntegerField(primary_key=True, editable=False)
     email = EmailField()
     first_name = CharField(max_length=254)
     last_name = CharField(max_length=254)
     received = DateTimeField(default=timezone.now)
+    action = CharField(choices=ACTIONS, max_length=8)
     status = FSMIntegerField(choices=CHOICES,
                              default=NEW,
                              protected=True)

@@ -31,7 +31,7 @@ class ProcessOrderTest(ShopifyTestCase):
                                              body=b'',
                                              content=fixup_json_payload)
         fixup_webhook_data.save()
-        order, created = record_order(fixup_webhook_data)
+        order, created = record_order(fixup_webhook_data, action=Order.ACTION_ENROLL)
 
         result = None
         with requests_mock.Mocker() as m:
@@ -57,7 +57,7 @@ class ProcessOrderTest(ShopifyTestCase):
         self.assertEqual(order.status, Order.ERROR)
 
     def test_valid_order(self):
-        order, created = record_order(self.webhook_data)
+        order, created = record_order(self.webhook_data, action=Order.ACTION_ENROLL)
 
         result = None
 
@@ -107,7 +107,7 @@ class ProcessOrderTest(ShopifyTestCase):
         self.assertEqual(order.status, Order.PROCESSED)
 
     def test_order_collision(self):
-        order, created = record_order(self.webhook_data)
+        order, created = record_order(self.webhook_data, action=Order.ACTION_ENROLL)
 
         enrollment_response = {
             'action': 'enroll',

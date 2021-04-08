@@ -27,12 +27,12 @@ class RecordOrderTest(WooCommerceTestCase):
     def test_record_order(self):
         # Make sure the order gets created, and that its ID matches
         # that in the payload
-        order1, created1 = record_order(self.webhook_data)
+        order1, created1 = record_order(self.webhook_data, action=Order.ACTION_ENROLL)
         self.assertTrue(created1)
         self.assertEqual(order1.id, self.json_payload['id'])
         # Try to create the order again, make sure we get a reference
         # instead
-        order2, created2 = record_order(self.webhook_data)
+        order2, created2 = record_order(self.webhook_data, action=Order.ACTION_ENROLL)
         self.assertFalse(created2)
         self.assertEqual(order1, order2)
 
@@ -46,7 +46,7 @@ class ProcessOrderTest(WooCommerceTestCase):
         self.setup_requests()
 
     def test_valid_order(self):
-        order, created = record_order(self.webhook_data)
+        order, created = record_order(self.webhook_data, action=Order.ACTION_ENROLL)
 
         enrollment_response = {
             'action': 'enroll',
@@ -96,7 +96,7 @@ class ProcessOrderTest(WooCommerceTestCase):
                                              content=fixup_json_payload)
         fixup_webhook_data.save()
 
-        order, created = record_order(fixup_webhook_data)
+        order, created = record_order(fixup_webhook_data, action=Order.ACTION_ENROLL)
 
         with requests_mock.Mocker() as m:
             m.register_uri('POST',

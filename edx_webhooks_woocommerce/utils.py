@@ -13,9 +13,10 @@ from .models import WooCommerceOrderItem as OrderItem
 logger = logging.getLogger(__name__)
 
 
-def record_order(data):
+def record_order(data, action):
     return Order.objects.get_or_create(
         id=data.content['id'],
+        action=action,
         defaults={
             'webhook': data,
             'email': data.content['billing']['email'],
@@ -116,7 +117,7 @@ def process_line_item(order, item):
             order_item.save()
 
     # Create an enrollment for the line item
-    enroll_in_course(sku, email)
+    enroll_in_course(sku, email, action=order.action)
 
     # Mark the item as processed
     order_item.finish_processing()

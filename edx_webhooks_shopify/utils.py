@@ -13,9 +13,10 @@ from .models import ShopifyOrderItem as OrderItem
 logger = logging.getLogger(__name__)
 
 
-def record_order(data):
+def record_order(data, action):
     return Order.objects.get_or_create(
         id=data.content['id'],
+        action=action,
         defaults={
             'webhook': data,
             'email': data.content['customer']['email'],
@@ -99,8 +100,10 @@ def process_line_item(order, item):
 
     # Create an enrollment for the line item. If the enrollment throws
     # an exception, we throw that exception up the stack so we can
-    # attempt to retry order processing.
-    enroll_in_course(sku, email)
+    # attempt to retry order processing. When "enrolling" to a course,
+    # given action will decide on the receiver (edX) side to enroll the
+    # email address or unenroll it.
+    enroll_in_course(sku, email, action=order.action)
 
     # Mark the item as processed
     order_item.finish_processing()
