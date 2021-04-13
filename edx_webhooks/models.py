@@ -100,7 +100,6 @@ class Order(ConcurrentTransitionMixin, Model):
         (ACTION_UNENROLL, ACTION_UNENROLL),
     )
 
-    id = AutoField(primary_key=True, editable=False)
     order_id = BigIntegerField(editable=False)
     email = EmailField()
     first_name = CharField(max_length=254)
