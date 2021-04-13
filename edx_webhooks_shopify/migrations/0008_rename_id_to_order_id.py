@@ -4,13 +4,6 @@ from django.db import migrations, models
 import django.db.models.deletion
 
 
-def populate(apps, schema_editor):
-   model = apps.get_model('edx_webhooks_shopify', 'shopifyorder')
-   for index, item in enumerate(model.objects.all(), start=1):
-       item.id = index
-       item.save()
-
-
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -32,26 +25,12 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='shopifyorder',
             name='id',
-            field=models.AutoField(default=0, editable=False, primary_key=True, serialize=False),
+            field=models.AutoField(default=1, editable=False, primary_key=True, serialize=False),
             preserve_default=False,
         ),
         migrations.AlterField(
             model_name='shopifyorder',
             name='order_id',
             field=models.BigIntegerField(editable=False),
-        ),
-        # Populate the auto incremented ID field from the first record
-        migrations.RunPython(populate),
-        # Remove default value from the primary key
-        migrations.AddField(
-            model_name='shopifyorder',
-            name='id',
-            field=models.AutoField(editable=False, primary_key=True, serialize=False),
-            preserve_default=False,
-        ),
-        migrations.AlterField(
-            model_name='shopifyorderitem',
-            name='order',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='edx_webhooks_shopify.ShopifyOrder'),
         ),
     ]
