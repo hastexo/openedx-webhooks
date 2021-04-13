@@ -6,7 +6,7 @@ import django.db.models.deletion
 
 def populate(apps, schema_editor):
    model = apps.get_model('edx_webhooks_shopify', 'shopifyorder')
-   for index, item in enumerate(model.objects.all()):
+   for index, item in enumerate(model.objects.all(), start=1):
        item.id = index
        item.save()
 
