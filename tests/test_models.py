@@ -19,7 +19,7 @@ class TestOrder(TestCase):
 
     def setUp(self):
         self.order = self.model()
-        self.order.id = 1
+        self.order.order_id = 1
         self.order.email = "johndoe@example.com"
         self.order.first_name = "John"
         self.order.last_name = "Doe"
@@ -71,7 +71,7 @@ class TestOrderItem(TestCase):
     def setUp(self):
         self.order_item = self.model()
         self.order = Order()
-        self.order.id = 2
+        self.order.order_id = 2
         self.order.email = "janedoe@example.com"
         self.order.first_name = "Jane"
         self.order.last_name = "Doe"

@@ -1,6 +1,7 @@
 from django.db.models import Model
 from django.db.models import GenericIPAddressField, BinaryField, DateTimeField
 from django.db.models import CharField, BigIntegerField, EmailField
+from django.db.models.fields import AutoField, BigAutoField
 try:
     # Django 3.1 and later has a built-in JSONField
     from django.db.models import JSONField
@@ -53,20 +54,20 @@ class WebhookData(ConcurrentTransitionMixin, Model):
                 target=PROCESSING,
                 on_error=ERROR)
     def start_processing(self):
-        logger.debug('Processing webhook %s' % self.id)
+        logger.debug('Processing webhook %s' % self.order_id)
 
     @transition(field=status,
                 source=PROCESSING,
                 target=PROCESSED,
                 on_error=ERROR)
     def finish_processing(self):
-        logger.debug('Finishing webhook %s' % self.id)
+        logger.debug('Finishing webhook %s' % self.order_id)
 
     @transition(field=status,
                 source=PROCESSING,
                 target=ERROR)
     def fail(self):
-        logger.debug('Failed to process webhook %s' % self.id)
+        logger.debug('Failed to process webhook %s' % self.order_id)
 
 
 class JSONWebhookData(WebhookData):
@@ -99,7 +100,8 @@ class Order(ConcurrentTransitionMixin, Model):
         (ACTION_UNENROLL, ACTION_UNENROLL),
     )
 
-    id = BigIntegerField(primary_key=True, editable=False)
+    id = AutoField(primary_key=True, editable=False)
+    order_id = BigIntegerField(editable=False)
     email = EmailField()
     first_name = CharField(max_length=254)
     last_name = CharField(max_length=254)
@@ -114,20 +116,20 @@ class Order(ConcurrentTransitionMixin, Model):
                 target=PROCESSING,
                 on_error=ERROR)
     def start_processing(self):
-        logger.debug('Processing order %s' % self.id)
+        logger.debug('Processing order %s' % self.order_id)
 
     @transition(field=status,
                 source=PROCESSING,
                 target=PROCESSED,
                 on_error=ERROR)
     def finish_processing(self):
-        logger.debug('Finishing order %s' % self.id)
+        logger.debug('Finishing order %s' % self.order_id)
 
     @transition(field=status,
                 source=PROCESSING,
                 target=ERROR)
     def fail(self):
-        logger.debug('Failed to process order %s' % self.id)
+        logger.debug('Failed to process order %s' % self.order_id)
 
 
 class OrderItem(ConcurrentTransitionMixin, Model):
@@ -153,21 +155,21 @@ class OrderItem(ConcurrentTransitionMixin, Model):
                 target=PROCESSING,
                 on_error=ERROR)
     def start_processing(self):
-        logger.debug('Processing item %s for order %s' % (self.id,
-                                                          self.order.id))
+        logger.debug('Processing item %s for order %s' % (self.order_id,
+                                                          self.order.order_id))
 
     @transition(field=status,
                 source=PROCESSING,
                 target=PROCESSED,
                 on_error=ERROR)
     def finish_processing(self):
-        logger.debug('Finishing item %s for order %s' % (self.id,
-                                                         self.order.id))
+        logger.debug('Finishing item %s for order %s' % (self.order_id,
+                                                         self.order.order_id))
 
     @transition(field=status,
                 source=PROCESSING,
                 target=ERROR)
     def fail(self):
         logger.debug('Failed to process item %s '
-                     'for order %s' % (self.id,
-                                       self.order.id))
+                     'for order %s' % (self.order_id,
+                                       self.order.order_id))

@@ -39,7 +39,7 @@ class WebhookTestCase(TestCase):
     def setup_course(self):
         # TODO: Set up a mock course
         course = Mock()
-        course.id = self.COURSE_ID_STRING
+        course.order_id = self.COURSE_ID_STRING
 
     def setup_requests(self):
         self.token_uri = '%s/oauth2/access_token' % settings.SOCIAL_AUTH_EDX_OAUTH2_URL_ROOT  # noqa: E501

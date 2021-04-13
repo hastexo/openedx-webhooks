@@ -35,7 +35,7 @@ def receive_json_webhook(request):
     # Look up the source IP
     ip, is_routable = get_client_ip(request)
     if ip is None:
-        logger.warning("Unable to get client IP for webhook %s" % data.id)
+        logger.warning("Unable to get client IP for webhook %s" % data.order_id)
     data.source = ip
     with transaction.atomic():
         data.save()

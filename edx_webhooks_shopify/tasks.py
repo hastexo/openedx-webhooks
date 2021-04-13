@@ -25,6 +25,6 @@ def process(self, data, send_email=False):
     """
 
     logger.debug('Processing order data: %s' % data)
-    self.order = Order.objects.get(id=data['id'])
+    self.order = Order.objects.get(order_id=data['id'])
 
     process_order(self.order, data, send_email)

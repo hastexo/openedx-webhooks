@@ -53,7 +53,7 @@ class ProcessOrderTest(ShopifyTestCase):
         # learn of the update until we read back the order. This can't
         # just use refresh_from_db(), because of the FSM-protected
         # status field.
-        order = Order.objects.get(pk=order.id)
+        order = Order.objects.get(pk=order.order_id)
         self.assertEqual(order.status, Order.ERROR)
 
     def test_valid_order(self):
@@ -103,7 +103,7 @@ class ProcessOrderTest(ShopifyTestCase):
 
         # Read back the order (can't just use refresh_from_db(),
         # because of the FSM-protected status field)
-        order = Order.objects.get(pk=order.id)
+        order = Order.objects.get(pk=order.order_id)
         self.assertEqual(order.status, Order.PROCESSED)
 
     def test_order_collision(self):
@@ -157,5 +157,5 @@ class ProcessOrderTest(ShopifyTestCase):
 
         # Read back the order (can't just use refresh_from_db(),
         # because of the FSM-protected status field)
-        order = Order.objects.get(pk=order.id)
+        order = Order.objects.get(pk=order.order_id)
         self.assertEqual(order.status, Order.PROCESSED)

@@ -29,7 +29,7 @@ class RecordOrderTest(WooCommerceTestCase):
         # that in the payload
         order1, created1 = record_order(self.webhook_data, action=Order.ACTION_ENROLL)
         self.assertTrue(created1)
-        self.assertEqual(order1.id, self.json_payload['id'])
+        self.assertEqual(order1.order_id, self.json_payload['id'])
         # Try to create the order again, make sure we get a reference
         # instead
         order2, created2 = record_order(self.webhook_data, action=Order.ACTION_ENROLL)
@@ -127,7 +127,7 @@ class ProcessLineItemTest(WooCommerceTestCase):
 
     def test_valid_single_line_item(self):
         order = Order()
-        order.id = 40
+        order.order_id = 40
         order.save()
         line_item = {
             "sku": "course-v1:org+course+run1",
@@ -185,7 +185,7 @@ class ProcessLineItemTest(WooCommerceTestCase):
             # Read back the order item (can't just use
             # refresh_from_db(), because of the FSM-protected status
             # field)
-            order_item = OrderItem.objects.get(pk=order_item.id)
+            order_item = OrderItem.objects.get(pk=order_item.order_id)
 
             self.assertEqual(order_item.order, order)
             self.assertEqual(order_item.sku, 'course-v1:org+course+run1')
@@ -194,7 +194,7 @@ class ProcessLineItemTest(WooCommerceTestCase):
 
     def test_invalid_line_items(self):
         order = Order()
-        order.id = 41
+        order.order_id = 41
         order.save()
         # These line items are an SKU without an email, and an email
         # without a SKU
@@ -217,7 +217,7 @@ class ProcessLineItemTest(WooCommerceTestCase):
 
     def test_invalid_sku(self):
         order = Order()
-        order.id = 42
+        order.order_id = 42
         order.save()
         line_items = [{"sku": "course-v1:org+nosuchcourse+run1",
                        "meta_data": [
@@ -248,7 +248,7 @@ class ProcessLineItemTest(WooCommerceTestCase):
 
     def test_invalid_email(self):
         order = Order()
-        order.id = 43
+        order.order_id = 43
         order.save()
         line_items = [{"sku": "course-v1:org+course+run1",
                        "meta_data": [

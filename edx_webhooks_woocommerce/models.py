@@ -11,6 +11,10 @@ class WooCommerceOrder(Order):
     class Meta:
         app_label = APP_LABEL
         abstract = False
+        constraints = [
+            UniqueConstraint(fields=['order_id', 'action'],
+                             name='unique_order_id_action')
+        ]
 
     webhook = ForeignKey(
         JSONWebhookData,

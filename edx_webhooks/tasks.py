@@ -22,7 +22,7 @@ class OrderTask(Task):
     def on_success(self, retval, task_id, args, kwargs):
         "Success handler: log successful order processing."
         logger.info('Successfully processed '
-                    'order %s' % self.order.id)
+                    'order %s' % self.order.order_id)
 
     def on_retry(self, exc, task_id, args, kwargs, einfo):
         """Retry handler: log an exception stack trace and a prose message,
@@ -31,7 +31,7 @@ class OrderTask(Task):
         """
         logger.warning('Failed to fully '
                        'process order %s '
-                       '(task ID %s), retrying: %s' % (self.order.id,
+                       '(task ID %s), retrying: %s' % (self.order.order_id,
                                                        task_id,
                                                        exc))
 
@@ -42,7 +42,7 @@ class OrderTask(Task):
         """
         logger.error('Failed to fully '
                      'process order %s '
-                     '(task ID %s): %s' % (self.order.id,
+                     '(task ID %s): %s' % (self.order.order_id,
                                            task_id,
                                            exc))
         self.order.fail()
